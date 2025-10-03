@@ -1,6 +1,6 @@
 ﻿using Eedu.Data.Auditable;
 
-namespace Eedu.Data.Entities.Structure;
+namespace Eedu.Data.Entities.Groups;
 
 public class GroupInvite : VersionableBaseModel<Guid>, ITenantEntity
 {

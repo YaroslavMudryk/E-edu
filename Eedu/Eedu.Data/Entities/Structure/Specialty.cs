@@ -1,4 +1,5 @@
 ﻿using Eedu.Data.Auditable;
+using Eedu.Data.Entities.Groups;
 
 namespace Eedu.Data.Entities.Structure;
 

@@ -1,4 +1,5 @@
 ﻿using Eedu.Data.Entities;
+using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.Structure;
 using Eedu.Data.ValueObjects;
@@ -42,6 +43,10 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
     public DbSet<GroupInvite> GroupInvites { get; set; }
     public DbSet<UserGroup> UserGroups { get; set; }
     public DbSet<UserGroupRole> UserGroupRoles { get; set; }
+    public DbSet<GroupPost> GroupPosts { get; set; }
+    public DbSet<Post> Posts { get; set; }
+    public DbSet<PostComment> PostComments { get; set; }
+    public DbSet<PostReaction> PostReactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -191,6 +196,22 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
             e.Property(s => s.Permissions).HasConversion(
                 v => v.ToJson(),
                 v => v.FromJson<GroupRolePermissions>());
+        });
+        modelBuilder.Entity<GroupPost>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<Post>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<PostComment>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<PostReaction>(e =>
+        {
+            e.HasKey(e => e.Id);
         });
     }
 }

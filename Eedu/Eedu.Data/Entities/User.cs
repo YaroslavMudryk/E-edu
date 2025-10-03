@@ -1,5 +1,5 @@
-﻿using Eedu.Data.Entities.Identity;
-using Eedu.Data.Entities.Structure;
+﻿using Eedu.Data.Entities.Groups;
+using Eedu.Data.Entities.Identity;
 
 namespace Eedu.Data.Entities;
 
@@ -24,4 +24,7 @@ public class User : SoftDeletableVersionableBaseModel<Guid>
     public ICollection<Mfa> Mfas { get; set; } = [];
     public ICollection<FailedLoginAttempt> FailedLoginAttempts { get; set; } = [];
     public ICollection<UserGroup> UserGroups { get; set; } = [];
+    public ICollection<PostReaction> PostReactions { get; set; } = [];
+    public ICollection<Post> Posts { get; set; } = [];
+    public ICollection<PostComment> PostComments { get; set; } = [];
 }
