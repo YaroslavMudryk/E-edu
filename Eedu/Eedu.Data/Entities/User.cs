@@ -1,4 +1,5 @@
 ﻿using Eedu.Data.Entities.Identity;
+using Eedu.Data.Entities.Structure;
 
 namespace Eedu.Data.Entities;
 
@@ -22,4 +23,5 @@ public class User : SoftDeletableVersionableBaseModel<Guid>
     public ICollection<Qr> Qrs { get; set; } = [];
     public ICollection<Mfa> Mfas { get; set; } = [];
     public ICollection<FailedLoginAttempt> FailedLoginAttempts { get; set; } = [];
+    public ICollection<UserGroup> UserGroups { get; set; } = [];
 }

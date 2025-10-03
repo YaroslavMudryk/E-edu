@@ -1,4 +1,4 @@
-﻿namespace Eedu.Data.Entities.ValueObjects;
+﻿namespace Eedu.Data.ValueObjects;
 
 public class LocationInfo
 {

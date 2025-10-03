@@ -1,4 +1,4 @@
-﻿using Eedu.Data.Entities.Enums;
+﻿using Eedu.Data.Enums;
 
 namespace Eedu.Data.Entities.Identity;
 

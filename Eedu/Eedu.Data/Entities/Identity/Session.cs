@@ -1,5 +1,5 @@
-﻿using Eedu.Data.Entities.Enums;
-using Eedu.Data.Entities.ValueObjects;
+﻿using Eedu.Data.Enums;
+using Eedu.Data.ValueObjects;
 
 namespace Eedu.Data.Entities.Identity;
 

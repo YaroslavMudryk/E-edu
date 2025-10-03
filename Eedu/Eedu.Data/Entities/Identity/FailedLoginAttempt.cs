@@ -1,4 +1,4 @@
-﻿using Eedu.Data.Entities.ValueObjects;
+﻿using Eedu.Data.ValueObjects;
 
 namespace Eedu.Data.Entities.Identity;
 

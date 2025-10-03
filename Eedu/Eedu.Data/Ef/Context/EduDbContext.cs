@@ -1,6 +1,7 @@
 ﻿using Eedu.Data.Entities;
 using Eedu.Data.Entities.Identity;
-using Eedu.Data.Entities.ValueObjects;
+using Eedu.Data.Entities.Structure;
+using Eedu.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -32,6 +33,15 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<ClientPermission> ClientPermissions { get; set; }
     public DbSet<App> Apps { get; set; }
+
+    //structure
+    public DbSet<University> Universities { get; set; }
+    public DbSet<Faculty> Faculties { get; set; }
+    public DbSet<Specialty> Specialties { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<GroupInvite> GroupInvites { get; set; }
+    public DbSet<UserGroup> UserGroups { get; set; }
+    public DbSet<UserGroupRole> UserGroupRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -148,6 +158,39 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
         modelBuilder.Entity<UserRole>(builder =>
         {
             builder.HasKey(e => e.Id);
+        });
+
+        //structure
+        modelBuilder.Entity<University>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<Faculty>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<Specialty>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<Group>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<GroupInvite>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<UserGroup>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<UserGroupRole>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.Property(s => s.Permissions).HasConversion(
+                v => v.ToJson(),
+                v => v.FromJson<GroupRolePermissions>());
         });
     }
 }

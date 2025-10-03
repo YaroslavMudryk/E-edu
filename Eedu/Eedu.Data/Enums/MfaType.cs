@@ -1,4 +1,4 @@
-﻿namespace Eedu.Data.Entities.Enums;
+﻿namespace Eedu.Data.Enums;
 
 public enum MfaType
 {
