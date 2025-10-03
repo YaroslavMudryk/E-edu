@@ -1,6 +1,7 @@
 ﻿using Eedu.Data.Entities;
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
+using Eedu.Data.Entities.LearningProcess;
 using Eedu.Data.Entities.Structure;
 using Eedu.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,12 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
     public DbSet<Post> Posts { get; set; }
     public DbSet<PostComment> PostComments { get; set; }
     public DbSet<PostReaction> PostReactions { get; set; }
+
+    //learningprocess
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<Lesson> Lessons { get; set; }
+    public DbSet<Mark> Marks { get; set; }
+    public DbSet<Report> Reports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -212,6 +219,39 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
         modelBuilder.Entity<PostReaction>(e =>
         {
             e.HasKey(e => e.Id);
+        });
+
+        //learningprocess
+        modelBuilder.Entity<Subject>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.Property(s => s.Plan).HasConversion(
+                v => v.ToJson(),
+                v => v.FromJson<SubjectPlan>());
+        });
+        modelBuilder.Entity<Lesson>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.Property(s => s.InviteLinks).HasConversion(
+                v => v.ToJson(),
+                v => v.FromJson<InviteLink>());
+            e.Property(s => s.UsefulLinks).HasConversion(
+                v => v.ToJson(),
+                v => v.FromJson<List<UsefulLink>>());
+        });
+        modelBuilder.Entity<Mark>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<Report>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.Property(s => s.Marks).HasConversion(
+                v => v.ToJson(),
+                v => v.FromJson<List<Student>>());
+            e.Property(s => s.CalculatedMarks).HasConversion(
+                v => v.ToJson(), 
+                v => v.FromJson<List<Student>>());
         });
     }
 }

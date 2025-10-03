@@ -1,5 +1,6 @@
 ﻿using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
+using Eedu.Data.Entities.LearningProcess;
 
 namespace Eedu.Data.Entities;
 
@@ -27,4 +28,5 @@ public class User : SoftDeletableVersionableBaseModel<Guid>
     public ICollection<PostReaction> PostReactions { get; set; } = [];
     public ICollection<Post> Posts { get; set; } = [];
     public ICollection<PostComment> PostComments { get; set; } = [];
+    public ICollection<Subject> Subjects { get; set; } = [];
 }
