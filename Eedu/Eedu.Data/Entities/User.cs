@@ -1,8 +1,8 @@
-﻿using Eedu.Data.Entities.Dormitory;
+﻿using Eedu.Data.Entities.Dormitories;
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.LearningProcess;
-using Eedu.Data.Entities.Schedule;
+using Eedu.Data.Entities.Schedules;
 
 namespace Eedu.Data.Entities;
 
@@ -42,5 +42,4 @@ public class User : SoftDeletableVersionableBaseModel<Guid>
     
     //schedule
     public ICollection<Schedule> Schedules { get; set; } = []; // As teacher
-    public ICollection<ScheduleChange> ScheduleChanges { get; set; } = []; // Changes made by user
 }

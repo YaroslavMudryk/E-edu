@@ -1,7 +1,7 @@
 using Eedu.Data.Auditable;
 using Eedu.Data.Entities.Groups;
 
-namespace Eedu.Data.Entities.Schedule;
+namespace Eedu.Data.Entities.Schedules;
 
 public class SchedulePeriod : VersionableBaseModel<Guid>, ITenantEntity
 {
@@ -12,7 +12,7 @@ public class SchedulePeriod : VersionableBaseModel<Guid>, ITenantEntity
     public bool IsActive { get; set; }
     
     public Guid? GroupId { get; set; } // Optional: Can be group-specific
-    public Group? Group { get; set; }
+    public Group Group { get; set; }
     
     public ICollection<Schedule> Schedules { get; set; } = [];
     public string TenantId { get; set; }

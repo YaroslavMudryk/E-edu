@@ -1,8 +1,7 @@
 using Eedu.Data.Auditable;
 using Eedu.Data.Enums;
-using Eedu.Data.Entities;
 
-namespace Eedu.Data.Entities.Dormitory;
+namespace Eedu.Data.Entities.Dormitories;
 
 public class RoomFee : VersionableBaseModel<Guid>, ITenantEntity
 {

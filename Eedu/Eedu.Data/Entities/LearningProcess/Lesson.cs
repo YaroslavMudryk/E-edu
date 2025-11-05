@@ -1,7 +1,6 @@
 ﻿using Eedu.Data.Auditable;
 using Eedu.Data.Enums;
-using Eedu.Data.Entities;
-using Eedu.Data.Entities.Schedule;
+using Eedu.Data.Entities.Schedules;
 
 namespace Eedu.Data.Entities.LearningProcess;
 

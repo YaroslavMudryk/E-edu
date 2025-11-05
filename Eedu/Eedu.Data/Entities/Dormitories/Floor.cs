@@ -1,6 +1,6 @@
 using Eedu.Data.Auditable;
 
-namespace Eedu.Data.Entities.Dormitory;
+namespace Eedu.Data.Entities.Dormitories;
 
 public class Floor : VersionableBaseModel<Guid>, ITenantEntity
 {

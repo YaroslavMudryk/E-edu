@@ -1,4 +1,4 @@
-﻿using Eedu.Data.Entities.Dormitory;
+﻿using Eedu.Data.Entities.Dormitories;
 
 namespace Eedu.Data.Entities.Structure;
 

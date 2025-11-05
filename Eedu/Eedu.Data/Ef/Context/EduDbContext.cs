@@ -1,9 +1,9 @@
 ﻿using Eedu.Data.Entities;
-using Eedu.Data.Entities.Dormitory;
+using Eedu.Data.Entities.Dormitories;
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.LearningProcess;
-using Eedu.Data.Entities.Schedule;
+using Eedu.Data.Entities.Schedules;
 using Eedu.Data.Entities.Structure;
 using Eedu.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +71,6 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
     //schedule
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<SchedulePeriod> SchedulePeriods { get; set; }
-    public DbSet<ScheduleChange> ScheduleChanges { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -365,19 +364,6 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
             e.HasKey(e => e.Id);
             e.HasIndex(sp => new { sp.GroupId, sp.Name }).IsUnique()
                 .HasFilter("[GroupId] IS NOT NULL");
-        });
-        modelBuilder.Entity<ScheduleChange>(e =>
-        {
-            e.HasKey(e => e.Id);
-            e.HasOne(sc => sc.ChangedBy)
-                .WithMany(u => u.ScheduleChanges)
-                .HasForeignKey(sc => sc.ChangedById)
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            e.HasOne(sc => sc.ChangedTeacher)
-                .WithMany()
-                .HasForeignKey(sc => sc.ChangedTeacherId)
-                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

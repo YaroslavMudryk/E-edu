@@ -1,7 +1,7 @@
 using Eedu.Data.Auditable;
 using Eedu.Data.Entities.Structure;
 
-namespace Eedu.Data.Entities.Dormitory;
+namespace Eedu.Data.Entities.Dormitories;
 
 public class Dormitory : VersionableBaseModel<Guid>, ITenantEntity
 {

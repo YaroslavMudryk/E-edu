@@ -1,10 +1,9 @@
 using Eedu.Data.Auditable;
-using Eedu.Data.Enums;
-using Eedu.Data.Entities;
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.LearningProcess;
+using Eedu.Data.Enums;
 
-namespace Eedu.Data.Entities.Schedule;
+namespace Eedu.Data.Entities.Schedules;
 
 public class Schedule : VersionableBaseModel<Guid>, ITenantEntity
 {
@@ -27,21 +26,19 @@ public class Schedule : VersionableBaseModel<Guid>, ITenantEntity
     
     // Optional: Subject (if linked to a subject)
     public Guid? SubjectId { get; set; }
-    public Subject? Subject { get; set; }
+    public Subject Subject { get; set; }
     
     // Optional: Specific lesson instance (if linked to a lesson)
     public Guid? LessonId { get; set; }
-    public Lesson? Lesson { get; set; }
+    public Lesson Lesson { get; set; }
     
     // Optional: Teacher (if different from Subject.Teacher or if no Subject)
     public Guid? TeacherId { get; set; }
-    public User? Teacher { get; set; }
+    public User Teacher { get; set; }
     
     // Schedule period (semester/academic period)
     public Guid? SchedulePeriodId { get; set; }
-    public SchedulePeriod? SchedulePeriod { get; set; }
-    
-    public ICollection<ScheduleChange> Changes { get; set; } = [];
+    public SchedulePeriod SchedulePeriod { get; set; }
     public string TenantId { get; set; }
 }
 
