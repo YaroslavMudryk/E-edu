@@ -13,5 +13,7 @@ public class UserGroup : VersionableBaseModel<Guid>, ITenantEntity
     public Group Group { get; set; }
     public Guid UserGroupRoleId { get; set; }
     public UserGroupRole UserGroupRole { get; set; }
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Group.Specialty.Faculty.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }

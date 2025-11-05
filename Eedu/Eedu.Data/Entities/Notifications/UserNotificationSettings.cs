@@ -32,6 +32,8 @@ public class UserNotificationSettings : VersionableBaseModel<Guid>, ITenantEntit
     public string? DigestFrequency { get; set; } // "Daily", "Weekly", "Never"
     public TimeOnly? DigestTime { get; set; }
     
-    public string TenantId { get; set; }
+    // TenantId: User's primary university context or can be unified
+    // Should be set from user's primary university or context where settings apply
+    public Guid TenantId { get; set; }
 }
 

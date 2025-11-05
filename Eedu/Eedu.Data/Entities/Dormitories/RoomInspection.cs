@@ -20,6 +20,7 @@ public class RoomInspection : VersionableBaseModel<Guid>, ITenantEntity
     public Guid InspectedById { get; set; } // Staff member who performed inspection
     public User InspectedBy { get; set; }
     
-    public string TenantId { get; set; }
+    // TenantId should equal Room.Dormitory.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

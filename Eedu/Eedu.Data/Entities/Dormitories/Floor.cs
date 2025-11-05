@@ -13,6 +13,8 @@ public class Floor : VersionableBaseModel<Guid>, ITenantEntity
     public Dormitory Dormitory { get; set; }
     
     public ICollection<Room> Rooms { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Dormitory.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

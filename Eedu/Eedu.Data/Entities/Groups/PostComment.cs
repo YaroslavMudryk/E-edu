@@ -12,5 +12,7 @@ public class PostComment : VersionableBaseModel<Guid>, ITenantEntity
     public User User { get; set; }
     public Guid PostId { get; set; }
     public Post Post { get; set; }
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Post.TenantId (set via relationship)
+    public Guid TenantId { get; set; }
 }

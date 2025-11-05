@@ -15,6 +15,8 @@ public class SchedulePeriod : VersionableBaseModel<Guid>, ITenantEntity
     public Group Group { get; set; }
     
     public ICollection<Schedule> Schedules { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Group.Specialty.Faculty.UniversityId (set via relationship) or null if not group-specific
+    public Guid TenantId { get; set; }
 }
 

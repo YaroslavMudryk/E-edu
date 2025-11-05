@@ -20,6 +20,7 @@ public class RoomFee : VersionableBaseModel<Guid>, ITenantEntity
     public Guid? ProcessedById { get; set; } // Staff who processed payment
     public User ProcessedBy { get; set; }
     
-    public string TenantId { get; set; }
+    // TenantId should equal RoomAssignment.Room.Dormitory.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

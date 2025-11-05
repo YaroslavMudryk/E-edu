@@ -23,6 +23,7 @@ public class MaintenanceRequest : VersionableBaseModel<Guid>, ITenantEntity
     public Guid? AssignedToId { get; set; } // Maintenance staff assigned to fix
     public User AssignedTo { get; set; }
     
-    public string TenantId { get; set; }
+    // TenantId should equal Room.Dormitory.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

@@ -22,5 +22,7 @@ public class Group : VersionableBaseModel<Guid>, ITenantEntity
     public ICollection<Subject> Subjects { get; set; } = [];
     public ICollection<Schedule> Schedules { get; set; } = [];
     public ICollection<SchedulePeriod> SchedulePeriods { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Specialty.Faculty.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }

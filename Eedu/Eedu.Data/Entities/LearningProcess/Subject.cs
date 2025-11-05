@@ -20,7 +20,9 @@ public class Subject : VersionableBaseModel<Guid>, ITenantEntity
     public User Teacher { get; set; }
     public ICollection<Lesson> Lessons { get; set; } = [];
     public ICollection<Schedule> Schedules { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Group.Specialty.Faculty.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 
 public class SubjectPlan

@@ -10,5 +10,8 @@ public class Faculty : VersionableBaseModel<Guid>, ITenantEntity
     public Guid UniversityId { get; set; }
     public University University { get; set; }
     public ICollection<Specialty> Specialties { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal UniversityId
+    public Guid TenantId { get; set; }
 }
+

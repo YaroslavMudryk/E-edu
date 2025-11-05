@@ -19,6 +19,7 @@ public class NotificationDelivery : VersionableBaseModel<Guid>, ITenantEntity
     public Guid NotificationId { get; set; }
     public Notification Notification { get; set; }
     
-    public string TenantId { get; set; }
+    // TenantId should equal Notification.TenantId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

@@ -21,6 +21,8 @@ public class RoomAssignment : VersionableBaseModel<Guid>, ITenantEntity
     public User AssignedBy { get; set; }
     
     public ICollection<RoomFee> Fees { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Room.Dormitory.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

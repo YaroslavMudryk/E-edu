@@ -11,6 +11,7 @@ public class RoomAmenity : VersionableBaseModel<Guid>, ITenantEntity
     public Guid RoomId { get; set; }
     public Room Room { get; set; }
     
-    public string TenantId { get; set; }
+    // TenantId should equal Room.Dormitory.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

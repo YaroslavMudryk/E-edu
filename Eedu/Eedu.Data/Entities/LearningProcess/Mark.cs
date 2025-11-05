@@ -12,5 +12,7 @@ public class Mark : VersionableBaseModel<Guid>, ITenantEntity
     public User Student { get; set; }
     public string StudentName { get; set; } //format (LastName FirstName (if same names exists, appear MiddleName))
     public ICollection<Report> Reports { get; set; }
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Lesson.Subject.Group.Specialty.Faculty.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }

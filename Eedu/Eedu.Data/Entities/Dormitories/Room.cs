@@ -27,6 +27,8 @@ public class Room : VersionableBaseModel<Guid>, ITenantEntity
     public ICollection<RoomInspection> Inspections { get; set; } = [];
     public ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = [];
     public ICollection<FurnitureItem> FurnitureItems { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Dormitory.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

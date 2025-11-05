@@ -12,7 +12,9 @@ public class Report : VersionableBaseModel<Guid>, ITenantEntity
     public List<Student> Marks { get; set; }
     public Guid SubjectId { get; set; }
     public Subject Subject { get; set; }
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Subject.Group.Specialty.Faculty.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 
 public class Student

@@ -25,6 +25,8 @@ public class NotificationTemplate : VersionableBaseModel<Guid>, ITenantEntity
     public bool IsActive { get; set; }
     public string? Placeholders { get; set; } // JSON array of available placeholders
     
-    public string TenantId { get; set; }
+    // TenantId: Templates can be shared across universities (unified) but track tenant context
+    // Can be set to specific UniversityId or use Guid.Empty for system-wide templates
+    public Guid TenantId { get; set; }
 }
 

@@ -7,7 +7,10 @@ public class UserGroupRole : VersionableBaseModel<Guid>, ITenantEntity
     public string Name { get; set; }
     public GroupRolePermissions Permissions { get; set; }
     public ICollection<UserGroup> UserGroups { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal UserGroup.Group.Specialty.Faculty.UniversityId (set via relationship)
+    // Note: UserGroupRole can be shared across groups, TenantId should be set from primary UserGroup
+    public Guid TenantId { get; set; }
 }
 
 public class GroupRolePermissions

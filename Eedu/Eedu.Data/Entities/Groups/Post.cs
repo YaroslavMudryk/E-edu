@@ -12,5 +12,8 @@ public class Post : VersionableBaseModel<Guid>, ITenantEntity
     public User User { get; set; }
     public ICollection<GroupPost> GroupPosts { get; set; } = [];
     public ICollection<PostComment> PostComments { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal GroupPost.Group.Specialty.Faculty.UniversityId (set via relationship)
+    // Note: Post can belong to multiple groups, TenantId should be set from primary GroupPost
+    public Guid TenantId { get; set; }
 }

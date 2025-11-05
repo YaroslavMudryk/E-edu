@@ -11,5 +11,7 @@ public class Specialty : VersionableBaseModel<Guid>, ITenantEntity
     public Guid FacultyId { get; set; }
     public Faculty Faculty { get; set; }
     public ICollection<Group> Groups { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Faculty.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }

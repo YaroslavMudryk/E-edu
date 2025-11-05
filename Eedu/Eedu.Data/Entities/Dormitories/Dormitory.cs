@@ -18,6 +18,9 @@ public class Dormitory : VersionableBaseModel<Guid>, ITenantEntity
     
     public ICollection<Floor> Floors { get; set; } = [];
     public ICollection<Room> Rooms { get; set; } = [];
-    public string TenantId { get; set; }
+    
+    // TenantId should equal UniversityId
+    public Guid TenantId { get; set; }
 }
+
 

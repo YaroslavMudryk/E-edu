@@ -39,6 +39,8 @@ public class Schedule : VersionableBaseModel<Guid>, ITenantEntity
     // Schedule period (semester/academic period)
     public Guid? SchedulePeriodId { get; set; }
     public SchedulePeriod SchedulePeriod { get; set; }
-    public string TenantId { get; set; }
+    
+    // TenantId should equal Group.Specialty.Faculty.UniversityId (set via relationship)
+    public Guid TenantId { get; set; }
 }
 

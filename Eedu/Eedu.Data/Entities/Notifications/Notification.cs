@@ -44,6 +44,10 @@ public class Notification : VersionableBaseModel<Guid>, ITenantEntity
     // Delivery tracking
     public ICollection<NotificationDelivery> Deliveries { get; set; } = [];
     
-    public string TenantId { get; set; }
+    // TenantId: For unified notifications, can be derived from:
+    // - Related entities (Subject, Lesson, Group) if linked
+    // - User's primary university context if not linked to tenant-specific entity
+    // - Can be unified/shared across universities but still tracks tenant context
+    public Guid TenantId { get; set; }
 }
 
