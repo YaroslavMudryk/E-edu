@@ -3,6 +3,7 @@ using Eedu.Data.Entities.Dormitories;
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.LearningProcess;
+using Eedu.Data.Entities.Notifications;
 using Eedu.Data.Entities.Schedules;
 using Eedu.Data.Entities.Structure;
 using Eedu.Data.ValueObjects;
@@ -71,6 +72,12 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
     //schedule
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<SchedulePeriod> SchedulePeriods { get; set; }
+
+    //notifications
+    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<NotificationDelivery> NotificationDeliveries { get; set; }
+    public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
+    public DbSet<UserNotificationSettings> UserNotificationSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -364,6 +371,49 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
             e.HasKey(e => e.Id);
             e.HasIndex(sp => new { sp.GroupId, sp.Name }).IsUnique()
                 .HasFilter("[GroupId] IS NOT NULL");
+        });
+
+        //notifications
+        modelBuilder.Entity<Notification>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(n => new { n.RecipientId, n.Status, n.CreatedAt })
+                .HasFilter("[Status] IN (1, 2)"); // Index for unread/read notifications
+            
+            e.HasOne(n => n.Recipient)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.RecipientId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            e.HasOne(n => n.Sender)
+                .WithMany()
+                .HasForeignKey(n => n.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<NotificationDelivery>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(nd => new { nd.NotificationId, nd.Channel });
+            
+            e.HasOne(nd => nd.Notification)
+                .WithMany(n => n.Deliveries)
+                .HasForeignKey(nd => nd.NotificationId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        modelBuilder.Entity<NotificationTemplate>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(nt => new { nt.Type, nt.TenantId, nt.Name }).IsUnique();
+        });
+        modelBuilder.Entity<UserNotificationSettings>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(uns => uns.UserId).IsUnique();
+            
+            e.HasOne(uns => uns.User)
+                .WithOne(u => u.NotificationSettings)
+                .HasForeignKey<UserNotificationSettings>(uns => uns.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

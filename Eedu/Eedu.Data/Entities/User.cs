@@ -2,6 +2,7 @@
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.LearningProcess;
+using Eedu.Data.Entities.Notifications;
 using Eedu.Data.Entities.Schedules;
 
 namespace Eedu.Data.Entities;
@@ -42,4 +43,8 @@ public class User : SoftDeletableVersionableBaseModel<Guid>
     
     //schedule
     public ICollection<Schedule> Schedules { get; set; } = []; // As teacher
+    
+    //notifications
+    public ICollection<Notification> Notifications { get; set; } = []; // As recipient
+    public UserNotificationSettings? NotificationSettings { get; set; }
 }
