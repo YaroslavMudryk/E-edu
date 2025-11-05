@@ -1,4 +1,5 @@
 ﻿using Eedu.Data.Entities;
+using Eedu.Data.Entities.Dormitory;
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.LearningProcess;
@@ -54,6 +55,17 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
     public DbSet<Lesson> Lessons { get; set; }
     public DbSet<Mark> Marks { get; set; }
     public DbSet<Report> Reports { get; set; }
+
+    //dormitory
+    public DbSet<Dormitory> Dormitories { get; set; }
+    public DbSet<Floor> Floors { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    public DbSet<RoomAssignment> RoomAssignments { get; set; }
+    public DbSet<RoomAmenity> RoomAmenities { get; set; }
+    public DbSet<RoomInspection> RoomInspections { get; set; }
+    public DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
+    public DbSet<RoomFee> RoomFees { get; set; }
+    public DbSet<FurnitureItem> FurnitureItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -252,6 +264,80 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
             e.Property(s => s.CalculatedMarks).HasConversion(
                 v => v.ToJson(), 
                 v => v.FromJson<List<Student>>());
+        });
+
+        //dormitory
+        modelBuilder.Entity<Dormitory>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(d => new { d.UniversityId, d.Name }).IsUnique();
+        });
+        modelBuilder.Entity<Floor>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(f => new { f.DormitoryId, f.FloorNumber }).IsUnique();
+        });
+        modelBuilder.Entity<Room>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(r => new { r.FloorId, r.Number }).IsUnique();
+        });
+        modelBuilder.Entity<RoomAssignment>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(ra => new { ra.UserId, ra.RoomId, ra.StartDate })
+                .IsUnique()
+                .HasFilter("[Status] IN (1, 2, 5)"); // Prevent duplicate active assignments
+            
+            // Configure multiple navigation properties to User
+            e.HasOne(ra => ra.User)
+                .WithMany(u => u.RoomAssignments)
+                .HasForeignKey(ra => ra.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            e.HasOne(ra => ra.AssignedBy)
+                .WithMany(u => u.AssignedRoomAssignments)
+                .HasForeignKey(ra => ra.AssignedById)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<RoomAmenity>(e =>
+        {
+            e.HasKey(e => e.Id);
+        });
+        modelBuilder.Entity<RoomInspection>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasOne(ri => ri.InspectedBy)
+                .WithMany(u => u.RoomInspections)
+                .HasForeignKey(ri => ri.InspectedById)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<MaintenanceRequest>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasOne(mr => mr.RequestedBy)
+                .WithMany(u => u.MaintenanceRequests)
+                .HasForeignKey(mr => mr.RequestedById)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            e.HasOne(mr => mr.AssignedTo)
+                .WithMany(u => u.AssignedMaintenanceRequests)
+                .HasForeignKey(mr => mr.AssignedToId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<RoomFee>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasOne(rf => rf.ProcessedBy)
+                .WithMany(u => u.ProcessedRoomFees)
+                .HasForeignKey(rf => rf.ProcessedById)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<FurnitureItem>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(f => f.SerialNumber).IsUnique()
+                .HasFilter("[SerialNumber] IS NOT NULL AND [SerialNumber] != ''");
         });
     }
 }

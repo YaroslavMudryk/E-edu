@@ -1,4 +1,5 @@
-﻿using Eedu.Data.Entities.Groups;
+﻿using Eedu.Data.Entities.Dormitory;
+using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.LearningProcess;
 
@@ -29,4 +30,12 @@ public class User : SoftDeletableVersionableBaseModel<Guid>
     public ICollection<Post> Posts { get; set; } = [];
     public ICollection<PostComment> PostComments { get; set; } = [];
     public ICollection<Subject> Subjects { get; set; } = [];
+    
+    //dormitory
+    public ICollection<RoomAssignment> RoomAssignments { get; set; } = [];
+    public ICollection<RoomAssignment> AssignedRoomAssignments { get; set; } = []; // As admin/staff
+    public ICollection<RoomInspection> RoomInspections { get; set; } = [];
+    public ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = [];
+    public ICollection<MaintenanceRequest> AssignedMaintenanceRequests { get; set; } = [];
+    public ICollection<RoomFee> ProcessedRoomFees { get; set; } = [];
 }

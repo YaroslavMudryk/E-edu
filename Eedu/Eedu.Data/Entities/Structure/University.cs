@@ -1,4 +1,6 @@
-﻿namespace Eedu.Data.Entities.Structure;
+﻿using Eedu.Data.Entities.Dormitory;
+
+namespace Eedu.Data.Entities.Structure;
 
 public class University : VersionableBaseModel<Guid>
 {
@@ -6,4 +8,5 @@ public class University : VersionableBaseModel<Guid>
     public string Description { get; set; }
     public string EdboId { get; set; }
     public ICollection<Faculty> Faculties { get; set; } = [];
+    public ICollection<Dormitory> Dormitories { get; set; } = [];
 }
