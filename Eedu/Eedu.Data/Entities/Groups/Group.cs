@@ -1,5 +1,6 @@
 ﻿using Eedu.Data.Auditable;
 using Eedu.Data.Entities.LearningProcess;
+using Eedu.Data.Entities.Schedule;
 using Eedu.Data.Entities.Structure;
 
 namespace Eedu.Data.Entities.Groups;
@@ -19,5 +20,7 @@ public class Group : VersionableBaseModel<Guid>, ITenantEntity
     public ICollection<UserGroup> UserGroups { get; set; } = [];
     public ICollection<GroupPost> GroupPosts { get; set; } = [];
     public ICollection<Subject> Subjects { get; set; } = [];
+    public ICollection<Schedule> Schedules { get; set; } = [];
+    public ICollection<SchedulePeriod> SchedulePeriods { get; set; } = [];
     public string TenantId { get; set; }
 }

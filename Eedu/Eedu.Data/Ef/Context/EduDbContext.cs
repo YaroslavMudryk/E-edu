@@ -3,6 +3,7 @@ using Eedu.Data.Entities.Dormitory;
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.LearningProcess;
+using Eedu.Data.Entities.Schedule;
 using Eedu.Data.Entities.Structure;
 using Eedu.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -66,6 +67,11 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
     public DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
     public DbSet<RoomFee> RoomFees { get; set; }
     public DbSet<FurnitureItem> FurnitureItems { get; set; }
+
+    //schedule
+    public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<SchedulePeriod> SchedulePeriods { get; set; }
+    public DbSet<ScheduleChange> ScheduleChanges { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -338,6 +344,40 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
             e.HasKey(e => e.Id);
             e.HasIndex(f => f.SerialNumber).IsUnique()
                 .HasFilter("[SerialNumber] IS NOT NULL AND [SerialNumber] != ''");
+        });
+
+        //schedule
+        modelBuilder.Entity<Schedule>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(s => new { s.GroupId, s.DayOfWeek, s.StartTime, s.SchedulePeriodId })
+                .IsUnique()
+                .HasFilter("[IsActive] = 1 AND [Type] = 1"); // Prevent duplicate active regular schedules
+            
+            // Configure optional relationships
+            e.HasOne(s => s.Teacher)
+                .WithMany(u => u.Schedules)
+                .HasForeignKey(s => s.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<SchedulePeriod>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasIndex(sp => new { sp.GroupId, sp.Name }).IsUnique()
+                .HasFilter("[GroupId] IS NOT NULL");
+        });
+        modelBuilder.Entity<ScheduleChange>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.HasOne(sc => sc.ChangedBy)
+                .WithMany(u => u.ScheduleChanges)
+                .HasForeignKey(sc => sc.ChangedById)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            e.HasOne(sc => sc.ChangedTeacher)
+                .WithMany()
+                .HasForeignKey(sc => sc.ChangedTeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

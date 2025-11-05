@@ -1,5 +1,6 @@
 ﻿using Eedu.Data.Auditable;
 using Eedu.Data.Entities.Groups;
+using Eedu.Data.Entities.Schedule;
 
 namespace Eedu.Data.Entities.LearningProcess;
 
@@ -18,6 +19,7 @@ public class Subject : VersionableBaseModel<Guid>, ITenantEntity
     public Guid TeacherId { get; set; }
     public User Teacher { get; set; }
     public ICollection<Lesson> Lessons { get; set; } = [];
+    public ICollection<Schedule> Schedules { get; set; } = [];
     public string TenantId { get; set; }
 }
 

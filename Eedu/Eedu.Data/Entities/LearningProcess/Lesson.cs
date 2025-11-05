@@ -1,5 +1,7 @@
 ﻿using Eedu.Data.Auditable;
 using Eedu.Data.Enums;
+using Eedu.Data.Entities;
+using Eedu.Data.Entities.Schedule;
 
 namespace Eedu.Data.Entities.LearningProcess;
 
@@ -20,6 +22,7 @@ public class Lesson : VersionableBaseModel<Guid>, ITenantEntity
     public User SubstituteTeacher { get; set; }
     public Guid SubjectId { get; set; }
     public Subject Subject { get; set; }
+    public ICollection<Schedule> Schedules { get; set; } = [];
     public string TenantId { get; set; }
 }
 

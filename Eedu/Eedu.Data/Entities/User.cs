@@ -2,6 +2,7 @@
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
 using Eedu.Data.Entities.LearningProcess;
+using Eedu.Data.Entities.Schedule;
 
 namespace Eedu.Data.Entities;
 
@@ -38,4 +39,8 @@ public class User : SoftDeletableVersionableBaseModel<Guid>
     public ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = [];
     public ICollection<MaintenanceRequest> AssignedMaintenanceRequests { get; set; } = [];
     public ICollection<RoomFee> ProcessedRoomFees { get; set; } = [];
+    
+    //schedule
+    public ICollection<Schedule> Schedules { get; set; } = []; // As teacher
+    public ICollection<ScheduleChange> ScheduleChanges { get; set; } = []; // Changes made by user
 }
