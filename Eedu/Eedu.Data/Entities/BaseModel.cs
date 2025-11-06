@@ -2,8 +2,9 @@
 
 namespace Eedu.Data.Entities;
 
-public class BaseModel
+public class BaseModel<TId> : IAuditable
 {
+    public TId Id { get; set; }
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; }
 
@@ -11,15 +12,11 @@ public class BaseModel
     public string UpdatedBy { get; set; }
 }
 
-public class BaseModel<TId> : BaseModel
-{
-    public TId Id { get; set; }
-}
-
 public class SoftDeletableBaseModel<TId> : BaseModel<TId>, ISoftDeletable
 {
     public DateTime? DeletedAt { get; set; }
     public string DeletedBy { get; set; }
+    public bool HardDelete { get; set; }
 }
 
 public class VersionableBaseModel<TId> : BaseModel<TId>, IVersionable
@@ -31,5 +28,7 @@ public class SoftDeletableVersionableBaseModel<TId> : BaseModel<TId>, ISoftDelet
 {
     public DateTime? DeletedAt { get; set; }
     public string DeletedBy { get; set; }
+    public bool HardDelete { get; set; }
+
     public int Version { get; set; }
 }

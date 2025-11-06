@@ -1,4 +1,5 @@
-﻿using Eedu.Data.Entities;
+﻿using Eedu.Data.Auditable;
+using Eedu.Data.Entities;
 using Eedu.Data.Entities.Dormitories;
 using Eedu.Data.Entities.Groups;
 using Eedu.Data.Entities.Identity;
@@ -8,6 +9,8 @@ using Eedu.Data.Entities.Schedules;
 using Eedu.Data.Entities.Structure;
 using Eedu.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -274,7 +277,7 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
                 v => v.ToJson(),
                 v => v.FromJson<List<Student>>());
             e.Property(s => s.CalculatedMarks).HasConversion(
-                v => v.ToJson(), 
+                v => v.ToJson(),
                 v => v.FromJson<List<Student>>());
         });
 
@@ -300,13 +303,13 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
             e.HasIndex(ra => new { ra.UserId, ra.RoomId, ra.StartDate })
                 .IsUnique()
                 .HasFilter("[Status] IN (1, 2, 5)"); // Prevent duplicate active assignments
-            
+
             // Configure multiple navigation properties to User
             e.HasOne(ra => ra.User)
                 .WithMany(u => u.RoomAssignments)
                 .HasForeignKey(ra => ra.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             e.HasOne(ra => ra.AssignedBy)
                 .WithMany(u => u.AssignedRoomAssignments)
                 .HasForeignKey(ra => ra.AssignedById)
@@ -331,7 +334,7 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
                 .WithMany(u => u.MaintenanceRequests)
                 .HasForeignKey(mr => mr.RequestedById)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             e.HasOne(mr => mr.AssignedTo)
                 .WithMany(u => u.AssignedMaintenanceRequests)
                 .HasForeignKey(mr => mr.AssignedToId)
@@ -359,7 +362,7 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
             e.HasIndex(s => new { s.GroupId, s.DayOfWeek, s.StartTime, s.SchedulePeriodId })
                 .IsUnique()
                 .HasFilter("[IsActive] = 1 AND [Type] = 1"); // Prevent duplicate active regular schedules
-            
+
             // Configure optional relationships
             e.HasOne(s => s.Teacher)
                 .WithMany(u => u.Schedules)
@@ -379,12 +382,12 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
             e.HasKey(e => e.Id);
             e.HasIndex(n => new { n.RecipientId, n.Status, n.CreatedAt })
                 .HasFilter("[Status] IN (1, 2)"); // Index for unread/read notifications
-            
+
             e.HasOne(n => n.Recipient)
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(n => n.RecipientId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             e.HasOne(n => n.Sender)
                 .WithMany()
                 .HasForeignKey(n => n.SenderId)
@@ -394,7 +397,7 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
         {
             e.HasKey(e => e.Id);
             e.HasIndex(nd => new { nd.NotificationId, nd.Channel });
-            
+
             e.HasOne(nd => nd.Notification)
                 .WithMany(n => n.Deliveries)
                 .HasForeignKey(nd => nd.NotificationId)
@@ -409,12 +412,88 @@ public class EduDbContext(DbContextOptions<EduDbContext> options) : DbContext(op
         {
             e.HasKey(e => e.Id);
             e.HasIndex(uns => uns.UserId).IsUnique();
-            
+
             e.HasOne(uns => uns.User)
                 .WithOne(u => u.NotificationSettings)
                 .HasForeignKey<UserNotificationSettings>(uns => uns.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+    }
+
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var timeProvider = this.GetService<TimeProvider>();
+
+        bool internalTransaction = false;
+        IDbContextTransaction transaction = null;
+
+        if (this.Database.CurrentTransaction == null)
+        {
+            internalTransaction = true;
+            transaction = await this.Database.BeginTransactionAsync(cancellationToken);
+        }
+
+        await BeforeSaveChangesAsync(timeProvider);
+        var affected = await base.SaveChangesAsync(cancellationToken);
+        await AfterSaveChangesAsync(timeProvider);
+
+        if (internalTransaction)
+        {
+            await transaction.CommitAsync(cancellationToken);
+        }
+
+        return affected;
+    }
+
+    public virtual async Task BeforeSaveChangesAsync(TimeProvider timeProvider)
+    {
+        var auditableEntries = ChangeTracker.Entries().Where(s => s.Entity is IAuditable);
+
+        var utcNow = timeProvider.GetUtcNow().DateTime;
+        var by = "system"; // Replace with actual user identifier
+        foreach (var entry in auditableEntries)
+        {
+            var entity = entry.Entity as IAuditable;
+
+            if (entry.State == EntityState.Added)
+            {
+                entity.CreatedAt = utcNow;
+                entity.CreatedBy = by;
+                entity.UpdatedAt = utcNow;
+                entity.UpdatedBy = by;
+                if (entry.Entity is IVersionable versionableEntity)
+                {
+                    versionableEntity.Version = 1;
+                }
+            }
+            if (entry.State == EntityState.Deleted)
+            {
+                if (entry.Entity is ISoftDeletable softDeletableEntity)
+                {
+                    if (!softDeletableEntity.HardDelete)
+                    {
+                        softDeletableEntity.DeletedBy = by;
+                        softDeletableEntity.DeletedAt = utcNow;
+                        entry.State = EntityState.Modified;
+                    }
+                }
+            }
+            if (entry.State == EntityState.Modified)
+            {
+                entity.UpdatedAt = utcNow;
+                entity.UpdatedBy = by;
+                if (entry.Entity is IVersionable versionableEntity)
+                {
+                    versionableEntity.Version++;
+                }
+            }
+        }
+    }
+
+    public virtual async Task AfterSaveChangesAsync(TimeProvider timeProvider)
+    {
+
     }
 }
 
